@@ -8,7 +8,7 @@ const port = process.env.PORT || 4545
 app.use(cors())
 app.use(express.json())
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@cluster0.fx40ttv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -23,8 +23,33 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         await client.connect();
+        const database = client.db("EquiSportsDB");
+        const equipmentsCollection = database.collection("Equipments");
+
         app.get('/', async (req, res) => {
             res.send('hello world...')
+        })
+
+        app.post('/add-equipments', async (req, res) => {
+            const body = req.body;
+            const result = await equipmentsCollection.insertOne(body);
+            res.send(result)
+        })
+        app.get('/all-equipments', async (req, res) => {
+            const result = await equipmentsCollection.find().toArray()
+            res.send(result)
+        })
+        app.get('/all-equipments/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await equipmentsCollection.findOne(query)
+            res.send(result)
+        })
+        app.post('/my-equipments', async (req, res) => {
+            const email = req.body.email;
+            const query = { authorUser: email }
+            const result = await equipmentsCollection.find(query).toArray()
+            res.send(result)
         })
 
         await client.db("admin").command({ ping: 1 });
