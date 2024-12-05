@@ -51,7 +51,27 @@ async function run() {
             const result = await equipmentsCollection.find(query).toArray()
             res.send(result)
         })
-
+        app.patch('/update-equipments/:id', async (req, res) => {
+            const body = req.body;
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    image: body.image,
+                    itemName: body.itemName,
+                    category: body.category,
+                    price: body.price,
+                    rating: body.rating,
+                    customization: body.customization,
+                    processingTime: body.processingTime,
+                    stockStatus: body.stockStatus,
+                    description: body.description,
+                },
+            };
+            const result = await equipmentsCollection.updateOne(query, updateDoc, options)
+            res.send(result)
+        })
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
