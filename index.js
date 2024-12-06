@@ -25,6 +25,7 @@ async function run() {
         await client.connect();
         const database = client.db("EquiSportsDB");
         const equipmentsCollection = database.collection("Equipments");
+        const productsCollection = database.collection("products");
 
         app.get('/', async (req, res) => {
             res.send('hello world...')
@@ -37,6 +38,11 @@ async function run() {
         })
         app.get('/all-equipments', async (req, res) => {
             const result = await equipmentsCollection.find().toArray()
+            res.send(result)
+        })
+
+        app.get('/all-equipments/sortByPrice', async (req, res) => {
+            const result = await equipmentsCollection.find().sort({ price: 1 }).toArray()
             res.send(result)
         })
         app.get('/all-equipments/:id', async (req, res) => {
@@ -76,6 +82,14 @@ async function run() {
             const id = req.params.id
             const query = { _id: new ObjectId(id) }
             const result = await equipmentsCollection.deleteOne(query)
+            res.send(result)
+        })
+
+
+
+        // -------------------------------------
+        app.get('/products', async (req, res) => {
+            const result = await productsCollection.find().toArray()
             res.send(result)
         })
         await client.db("admin").command({ ping: 1 });
