@@ -36,14 +36,22 @@ async function run() {
             res.send(result)
         })
         app.get('/all-equipments', async (req, res) => {
-            const result = await equipmentsCollection.find().toArray()
-            res.send(result)
-        })
-
-        app.get('/all-equipments/sortByPrice', async (req, res) => {
+            const sort = req.query.sort;
+            let sortQuery = {};
+            if (sort === 'asc') {
+                sortQuery = { price: 1 };
+            } else if (sort === 'des') {
+                sortQuery = { price: -1 };
+            }
             const result = await equipmentsCollection.find().sort({ price: 1 }).toArray()
             res.send(result)
         })
+
+        app.get('/all-equipments', async (req, res) => {
+
+        })
+
+
         app.get('/all-equipments/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
