@@ -19,6 +19,24 @@
 
 ## Installation
 
+To get started with the project, follow these steps:
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/equisports-server-side.git
+2. Navigate to the project directory:
+   ```bash
+   cd equisports-server-side
+   
+3. Install dependencies:
+   ```bash
+   npm install
+4. Start the development server:
+   ```bash
+   node index.js
+
+### Better option you can try nodemon package .
+
 ## Contribution
 
 Feel free to submit issues or pull requests to improve the EquiSports server. Contributions are welcome!
